@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0c1210">
+<title>Выбивание телефонных номеров</title>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef2ef;--panel:#fff;--ink:#14201a;--mute:#69776f;--line:#d9e1db;--mf:#00b956;--bl:#ffc800;--bli:#221a00}
+@media (prefers-color-scheme:dark){:root{--bg:#0c1210;--panel:#151e19;--ink:#eaf1ec;--mute:#8a9a90;--line:#24312a}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--ink);font:15px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;display:flex;flex-direction:column;max-width:520px;margin:0 auto;padding-top:env(safe-area-inset-top,0px);user-select:none}
+.f{font-family:"Unbounded",system-ui,sans-serif}
+.ttl{margin:12px 14px 0;font:700 15px "Unbounded",system-ui,sans-serif;letter-spacing:-.3px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.top{margin:10px 14px 4px;padding:14px 16px;border-radius:20px;background:linear-gradient(135deg,var(--acc),color-mix(in srgb,var(--acc) 55%,#000));color:var(--accink);display:flex;justify-content:space-between;align-items:center}
+.top small{opacity:.8;font-size:12px;display:block}
+.bal{font:700 26px "Unbounded",system-ui,sans-serif;letter-spacing:-1px}
+main{flex:1;overflow-y:auto;padding:10px 14px 14px}
+nav{display:flex;border-top:1px solid var(--line);background:var(--panel);padding-bottom:env(safe-area-inset-bottom,0px)}
+nav button{flex:1;padding:12px 0;background:none;border:0;color:var(--mute);font:inherit;font-size:12.5px;font-weight:600}
+nav button.on{color:var(--ink);box-shadow:inset 0 3px 0 var(--acc)}
+.ops{display:flex;gap:8px;margin-bottom:14px;background:var(--panel);padding:5px;border-radius:14px}
+.op{flex:1;padding:10px;border-radius:10px;border:0;background:none;color:var(--mute);font:inherit;font-weight:700}
+.op.mf.on{background:var(--mf);color:#fff}.op.bl.on{background:var(--bl);color:var(--bli)}
+.stage{display:flex;justify-content:center;margin-bottom:16px}
+.sim{width:150px;height:186px;border:0;border-radius:16px 42px 16px 16px;background:var(--acc);color:var(--accink);font:700 18px "Unbounded",system-ui,sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;box-shadow:0 14px 34px -10px var(--acc);transition:transform .06s}
+.sim:active:not(:disabled){transform:scale(.94)}
+.sim:disabled{opacity:.4}
+.sim small{font:600 13px system-ui;opacity:.85}
+.chip{width:70px;height:52px;border-radius:7px;border:3px solid currentColor;background:repeating-linear-gradient(0deg,transparent 0 12px,currentColor 12px 15px);opacity:.7}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:10px}
+.sub{color:var(--mute);font-size:12px}
+.tier{display:flex;gap:10px;padding:8px 0;border-top:1px solid var(--line)}
+.dot{flex:none;width:12px;height:12px;border-radius:50%;margin-top:4px;background:var(--rc)}
+.bar{height:8px;border-radius:4px;background:var(--line);overflow:hidden;margin-top:5px}
+.bar i{display:block;height:100%;background:var(--rc)}
+.btn{padding:9px 13px;border-radius:10px;border:0;background:var(--acc);color:var(--accink);font:inherit;font-weight:700;white-space:nowrap}
+.btn:disabled{opacity:.45}
+.btn.ghost{background:none;color:var(--mute);border:1px solid var(--line)}
+.acts{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.empty{color:var(--mute);text-align:center;padding:30px 0}
+.note{background:color-mix(in srgb,var(--mf) 18%,var(--panel));border-color:var(--mf)}
+.num{font:700 16px "Unbounded",system-ui,sans-serif;color:var(--rc);letter-spacing:-.5px}
+.case{display:grid;gap:10px;padding:12px;border-radius:18px;background:linear-gradient(160deg,color-mix(in srgb,var(--ink) 8%,var(--panel)),var(--panel));border:1px solid var(--line)}
+.slot{border-radius:12px;padding:10px 12px;background:var(--bg);border:2px solid var(--rc);box-shadow:0 0 22px -8px var(--rc);display:flex;flex-direction:column;gap:3px}
+.slot.es{border:2px dashed var(--line);box-shadow:none;color:var(--mute);text-align:center;padding:16px;font-size:13px}
+#dock{background:var(--panel);border-top:2px solid var(--rc,var(--line));box-shadow:0 -14px 36px -14px var(--rc,transparent);padding:10px 14px 12px;transition:box-shadow .3s,border-color .3s}
+.scale{display:flex;gap:4px;margin-bottom:8px}
+.seg{flex:1;text-align:center;font-size:11px;font-weight:700;padding:5px 0;border-radius:7px;background:var(--line);color:var(--mute);transition:all .25s}
+.seg.on{background:var(--c);color:#111;box-shadow:0 0 16px -2px var(--c);transform:translateY(-2px)}
+.dnum{font:700 20px "Unbounded",system-ui,sans-serif;text-align:center;letter-spacing:-.5px;color:var(--rc,var(--ink))}
+.dmeta{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:6px;min-height:36px}
+input{width:100%;padding:13px 14px;border-radius:12px;border:2px solid var(--line);background:var(--panel);color:var(--ink);font:inherit;margin-bottom:10px;-webkit-user-select:text;user-select:text}
+input:focus{outline:none;border-color:var(--mf)}
+#auth{position:fixed;inset:0;z-index:10;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:20px}
+#auth[hidden]{display:none}
+.au{width:100%;max-width:380px}
+.au .op.on{background:var(--mf);color:#fff}.au .btn{background:var(--mf);color:#fff}
+.err{color:#ff5a5a;font-size:13px;min-height:18px;margin-bottom:8px}
+#toast{position:fixed;left:50%;bottom:190px;transform:translateX(-50%);max-width:88%;background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:12px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:20;text-align:center}
+#toast.on{opacity:1}
+</style>
+</head>
+<body>
+<div class="ttl row"><span>Выбивание телефонных номеров</span><span class="sub" id="who" style="font-weight:400;font-family:system-ui,sans-serif"></span></div>
+<div class="top"><div><small>Баланс</small><div class="bal" id="bal">0 ₽</div></div><div style="text-align:right"><small>Попытка</small><b class="f" style="font-size:15px">50 ₽</b></div></div>
+<main id="main"></main>
+<div id="dock"></div>
+<nav id="nav"></nav>
+<div id="auth" hidden></div>
+<div id="toast"></div>
+<script>
+const API='https://gjzskojoqjlidgrsnmdb.supabase.co',KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdqenNrb2pvcWpsaWRncnNubWRiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE1Njk4MzEsImV4cCI6MjEwNzE0NTgzMX0.HtDGPROjXqq_6tAgSZ7blv4qZqNfpPfufI4IQQeIBmk';
+const T=[{n:'Обычный',c:'#8a939b',v:0,w:0,d:'Без красивого рисунка. Не продаётся.'},{n:'Средний',c:'#3fa7ff',v:1000,w:3,d:'Как бронза: три одинаковые цифры в конце, AABB, ABAB, ABBA.'},{n:'Эпический',c:'#b26bff',v:20000,w:.12,d:'Как платина: пять одинаковых цифр или 12345 в конце.'},{n:'Мифический',c:'#ff3d7f',v:250000,w:.006,d:'Как VIP: шесть или семь одинаковых цифр, 1234567.'}];
+const OPS={m:'Мегафон',b:'Билайн'},SLOTS=6;
+const TABS=[['game','Игра'],['bag','Коллекция'],['case','Ящик'],['tr','Обмены'],['st','Итоги']];
+let ses=null,uid=null,P={coins:0,rc:[0,0,0,0],draws:0,spent:0,sold:0,bonus:0,nick:''},N=[],TR=[],NM={},PN={},tab='game',op='m',busy=false,dk=null,arm=null,amode='in',tradeFor=null,tnv='',peek=null,msg='';
+const $=id=>document.getElementById(id);
+const fmt=n=>Math.round(n).toLocaleString('ru-RU')+' ₽';
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+function toast(t){const e=$('toast');e.textContent=t;e.className='on';clearTimeout(toast.t);toast.t=setTimeout(()=>e.className='',3500)}
+async function authReq(path,body){const r=await fetch(API+path,{method:'POST',headers:{apikey:KEY,'Content-Type':'application/json'},body:JSON.stringify(body)});const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.msg||j.message||j.error_description||j.error||'Ошибка '+r.status);return j}
+function setSes(j){if(!j.access_token)throw new Error('Включено подтверждение почты (выключите Confirm email в Supabase)');ses={at:j.access_token,rt:j.refresh_token,exp:j.expires_at||Date.now()/1000+j.expires_in};uid=j.user.id;try{localStorage.setItem('nh_ses',JSON.stringify({...ses,uid}))}catch(e){}}
+async function refresh(){setSes(await authReq('/auth/v1/token?grant_type=refresh_token',{refresh_token:ses.rt}))}
+async function api(path,opt={}){
+ if(ses&&ses.exp-Date.now()/1000<60){try{await refresh()}catch(e){logout();throw e}}
+ const r=await fetch(API+path,{...opt,headers:{apikey:KEY,Authorization:'Bearer '+(ses?ses.at:KEY),'Content-Type':'application/json'}});
+ const t=await r.text();let j=null;try{j=t?JSON.parse(t):null}catch(e){j=t}
+ if(!r.ok)throw new Error((j&&(j.message||j.msg))||'Ошибка '+r.status);return j}
+const rpc=(f,a)=>api('/rest/v1/rpc/'+f,{method:'POST',body:JSON.stringify(a||{})});
+const get=q=>api('/rest/v1/'+q);
+async function mail(n){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(n.toLowerCase()));return 'u'+[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('').slice(0,40)+'@nomer-game.app'}
+function logout(){ses=null;uid=null;try{localStorage.removeItem('nh_ses')}catch(e){}dk=null;tradeFor=null;peek=null;amode='in';render()}
+async function doAuth(){const nick=$('an').value.trim(),p=$('ap').value,er=t=>{$('ae').textContent=t},up=amode=='up';
+ if(!/^[A-Za-zА-Яа-яЁё0-9_.-]{3,20}$/.test(nick))return er('Ник: 3–20 символов, буквы, цифры, _ . -');
+ if(p.length<6)return er('Пароль: минимум 6 символов');
+ if(up&&p!==$('ap2').value)return er('Пароли не совпадают');
+ er('Подождите…');
+ try{const email=await mail(nick);
+  setSes(up?await authReq('/auth/v1/signup',{email,password:p,data:{nick}}):await authReq('/auth/v1/token?grant_type=password',{email,password:p}));
+  await enter()}
+ catch(e){ses=null;uid=null;const m=e.message;er(/already/i.test(m)?'Такой ник уже занят':/invalid login/i.test(m)?'Неверный ник или пароль':m)}}
+async function enter(){tab='game';dk=null;msg='';try{if(await rpc('claim_bonus'))msg='Бонус за вход: +10 000 ₽'}catch(e){}await sync()}
+async function sync(){
+ const [p,n,t]=await Promise.all([get('profiles?id=eq.'+uid),get('numbers?owner=eq.'+uid+'&order=tier.desc,created_at.desc'),get('trades?status=eq.pending&order=created_at.desc')]);
+ if(!p.length)throw new Error('Профиль не найден');
+ P=p[0];N=n;TR=t;NM={};PN={};
+ const ids=[...new Set(t.flatMap(x=>[x.give_id,x.want_id].filter(Boolean)))],pids=[...new Set(t.flatMap(x=>[x.from_id,x.to_id]))];
+ if(ids.length)(await get('numbers?id=in.('+ids.join(',')+')')).forEach(x=>NM[x.id]=x);
+ if(pids.length)(await get('profiles?select=id,nick&id=in.('+pids.join(',')+')')).forEach(x=>PN[x.id]=x.nick);
+ render()}
+async function run(fn){try{await fn()}catch(e){toast(e.message);busy=false;render()}}
+function ask(k,fn){if(arm===k){arm=null;fn();return}arm=k;render();setTimeout(()=>{if(arm===k){arm=null;render()}},3000)}
+function setOp(o){op=o;render()}
+function go(t){tab=t;tradeFor=null;peek=null;render()}
+function pull(){run(async()=>{if(busy||P.coins<50)return;busy=true;msg='';dk={spin:1};dock();coinsUI();
+ const sp=(async()=>{for(let i=0;i<9;i++){const e=$('dn');if(e)e.textContent=`+7 (9${Math.random()*100|0}) ${100+Math.random()*900|0}-${10+Math.random()*90|0}-${10+Math.random()*90|0}`;await sleep(45)}})();
+ const [g]=await Promise.all([rpc('draw',{p_op:op}),sp]);
+ dk={g};busy=false;try{navigator.vibrate(g.tier*120)}catch(e){}
+ await sync()})}
+function sellAsk(id){const g=N.find(x=>x.id===id);if(!g)return;const f=()=>run(async()=>{await rpc('sell_number',{p_id:id});await sync()});if(g.tier>1)ask(id,f);else f()}
+function pin(id){run(async()=>{await rpc('toggle_showcase',{p_id:id});await sync()})}
+function startTrade(id){tradeFor=id;peek=null;tnv='';render()}
+function findNick(){const n=tnv.trim().toLowerCase();return n}
+function peekBox(){run(async()=>{const n=findNick();if(!n)return toast('Введите ник игрока');
+ const r=(await get('profiles?select=id,nick&nick=ilike.'+encodeURIComponent(n))).find(x=>x.nick.toLowerCase()==n);
+ if(!r)return toast('Игрок не найден');
+ peek={nick:r.nick,list:await get('numbers?owner=eq.'+r.id+'&showcase=eq.true&order=tier.desc')};render()})}
+function offer(want){run(async()=>{const n=findNick();if(!n)return toast('Введите ник игрока');
+ await rpc('offer_trade',{p_to_nick:n,p_give:tradeFor,p_want:want||null});toast('Предложение отправлено');tradeFor=null;peek=null;await sync()})}
+function accept(id){run(async()=>{toast(await rpc('accept_trade',{p_id:id})?'Обмен выполнен':'Обмен сорвался: номера изменились');await sync()})}
+function cancel(id){run(async()=>{await rpc('cancel_trade',{p_id:id});await sync()})}
+function coinsUI(){$('bal').textContent=fmt(P.coins);const s=document.querySelector('.sim');if(s)s.disabled=busy||P.coins<50}
+function numHTML(g){const t=T[g.tier];return `<span class="num" style="--rc:${t.c}">${g.num}</span> <span class="sub">${t.n}</span>`}
+function dock(){const el=$('dock');
+ const sc=a=>`<div class="scale">${T.map((t,i)=>`<div class="seg ${a===i?'on':''}" style="--c:${t.c}">${t.n}</div>`).join('')}</div>`;
+ if(!dk){el.style.setProperty('--rc','');el.innerHTML=sc(-1)+`<div class="dnum" style="font-size:15px;color:var(--mute)">Нажми на SIM, чтобы выбить номер</div><div class="dmeta"><span class="sub">Шкала редкости: чем правее, тем дороже</span></div>`;return}
+ if(dk.spin){el.style.setProperty('--rc','');el.innerHTML=sc(-1)+`<div class="dnum" id="dn" style="color:var(--mute)">…</div><div class="dmeta"><span class="sub">Выбиваем номер</span></div>`;return}
+ const g=dk.g,t=T[g.tier],it=g.id?N.find(x=>x.id===g.id):null;el.style.setProperty('--rc',t.c);
+ const act=g.tier==0?'<span class="sub">Обычный номер, цена 0 ₽</span>':!it?'<span class="sub">Номер больше не у вас</span>':it.showcase?'<span class="sub">В ящике ✓</span>':`<span style="display:flex;gap:6px"><button class="btn ghost" onclick="pin('${g.id}')">В ящик</button><button class="btn" onclick="sellAsk('${g.id}')">${arm===g.id?'Точно?':'Продать '+fmt(t.v)}</button></span>`;
+ el.innerHTML=sc(g.tier)+`<div class="dnum">${g.num}</div><div class="dmeta"><span class="sub">${OPS[g.op]} · ${t.n}</span>${act}</div>`}
+function authView(){const el=$('auth');el.hidden=false;const up=amode=='up';
+ el.innerHTML=`<div class="au"><div class="f" style="font-weight:700;font-size:20px;line-height:1.25;margin-bottom:6px">Выбивание телефонных номеров</div><div class="sub" style="margin-bottom:16px">${up?'Создайте аккаунт. Новый аккаунт получает 10 000 ₽':'Войдите в аккаунт, чтобы продолжить'}</div>
+ <div class="ops"><button class="op ${up?'':'on'}" onclick="amode='in';authView()">Войти</button><button class="op ${up?'on':''}" onclick="amode='up';authView()">Регистрация</button></div>
+ <input id="an" placeholder="Ник" autocomplete="username" maxlength="20"><input id="ap" type="password" placeholder="Пароль" autocomplete="${up?'new-password':'current-password'}">${up?'<input id="ap2" type="password" placeholder="Повторите пароль" autocomplete="new-password">':''}
+ <div class="err" id="ae"></div><button class="btn" style="width:100%;padding:14px" onclick="doAuth()">${up?'Создать аккаунт':'Войти'}</button>
+ <div class="sub" style="margin-top:14px">Аккаунт общий для всех устройств. Если забудете пароль, восстановить его нельзя.</div></div>`}
+function bagRow(g){const t=T[g.tier];return `<div class="card" style="border-left:6px solid ${t.c}"><div class="row"><div>${numHTML(g)}<div class="sub">${OPS[g.op]}${g.showcase?' · в ящике':''}</div></div><b>${fmt(t.v)}</b></div><div class="acts"><button class="btn ghost" onclick="pin('${g.id}')">${g.showcase?'Снять с ящика':'В ящик'}</button>${g.showcase?'':`<button class="btn ghost" onclick="startTrade('${g.id}')">Передать</button><button class="btn" onclick="sellAsk('${g.id}')">${arm===g.id?'Точно?':'Продать'}</button>`}</div></div>`}
+function tradePanel(){const g=N.find(x=>x.id===tradeFor);if(!g)return'';
+ return `<div class="card note"><b>Передать номер</b><div style="margin:6px 0 10px">${numHTML(g)}</div><input id="tn" placeholder="Ник друга" value="${tnv}" oninput="tnv=this.value" maxlength="20">
+ <div class="acts"><button class="btn" onclick="offer()">Подарить</button><button class="btn ghost" onclick="peekBox()">Обмен: ящик игрока</button><button class="btn ghost" onclick="tradeFor=null;peek=null;render()">Отмена</button></div>
+ ${peek?`<div class="sub" style="margin:10px 0 4px">Ящик игрока ${peek.nick}:</div>${peek.list.length?peek.list.map(x=>`<div class="row" style="padding:6px 0;border-top:1px solid var(--line)"><div>${numHTML(x)}</div><button class="btn" onclick="offer('${x.id}')">Обменять</button></div>`).join(''):'<div class="sub">Ящик пуст, можно только подарить.</div>'}`:''}</div>`}
+function trRow(t){const me=t.to_id===uid,give=NM[t.give_id],want=t.want_id?NM[t.want_id]:null;if(!give)return'';
+ const who=PN[me?t.from_id:t.to_id]||'игрок';
+ const text=me?`<b>${who}</b> ${want?'предлагает обмен':'дарит вам номер'}:<div style="margin:4px 0">${numHTML(give)}</div>${want?`<div class="sub">в обмен на ваш:</div><div>${numHTML(want)}</div>`:''}`
+  :`Вы → <b>${who}</b>:<div style="margin:4px 0">${numHTML(give)}</div>${want?`<div class="sub">в обмен на его:</div><div>${numHTML(want)}</div>`:'<div class="sub">подарок</div>'}`;
+ return `<div class="card">${text}<div class="acts">${me?`<button class="btn" onclick="accept('${t.id}')">Принять</button><button class="btn ghost" onclick="cancel('${t.id}')">Отклонить</button>`:`<button class="btn ghost" onclick="cancel('${t.id}')">Отменить</button>`}</div></div>`}
+function render(){
+ if(!uid){authView();return}$('auth').hidden=true;
+ document.documentElement.style.setProperty('--acc',op=='b'?'var(--bl)':'var(--mf)');
+ document.documentElement.style.setProperty('--accink',op=='b'?'var(--bli)':'#fff');
+ const inc=TR.filter(t=>t.to_id===uid).length,pins=N.filter(g=>g.showcase);
+ $('nav').innerHTML=TABS.map(t=>`<button class="${tab==t[0]?'on':''}" onclick="go('${t[0]}')">${t[1]}${t[0]=='tr'&&inc?' ('+inc+')':''}</button>`).join('');
+ let h='';
+ if(tab=='game'){
+  if(msg)h+=`<div class="card note"><b>${msg}</b></div>`;
+  h+=`<div class="ops">${['m','b'].map(o=>`<button class="op ${o=='m'?'mf':'bl'} ${op==o?'on':''}" onclick="setOp('${o}')">${OPS[o]}</button>`).join('')}</div>
+  <div class="stage"><button class="sim" onclick="pull()"><div class="chip"></div>Выбить<small>50 ₽</small></button></div>
+  <div class="sub" style="text-align:center;margin:-6px 0 12px">Один тап = одна попытка. Обычные номера не сохраняются.</div>`;
+  if(P.coins<50)h+=`<div class="card"><b>Не хватает на попытку.</b><div class="sub">Продайте номера из коллекции или вернитесь завтра за бонусом 10 000 ₽.</div></div>`;
+  h+=`<div class="card"><div class="sub" style="margin-bottom:6px">Рейтинг номеров: цена и шанс за одну попытку</div>${T.map((t,i)=>`<div class="tier" ${i?'':'style="border-top:0"'}><span class="dot" style="--rc:${t.c}"></span><div style="flex:1"><div class="row"><b>${t.n}</b><b>${fmt(t.v)}</b></div><div class="sub">${t.d}${i?' Шанс '+t.w+'%.':''}</div></div></div>`).join('')}</div>`;
+ }else if(tab=='bag'){
+  h+=tradeFor?tradePanel():'';
+  h+=N.length?N.map(bagRow).join(''):'<div class="empty">Пока пусто. Красивые номера появятся здесь.</div>';
+ }else if(tab=='case'){
+  h+=`<div class="card row"><div><div class="sub">Ящик ценных номеров · ${pins.length}/${SLOTS}</div><b class="f">${fmt(pins.reduce((a,g)=>a+T[g.tier].v,0))}</b></div></div><div class="case">`
+  +Array.from({length:SLOTS},(_,i)=>{const g=pins[i];return g?`<div class="slot" style="--rc:${T[g.tier].c}"><div class="sub">${OPS[g.op]}</div><div class="num" style="font-size:17px">${g.num}</div><div class="row"><span class="sub">${T[g.tier].n} · ${fmt(T[g.tier].v)}</span><button class="btn ghost" onclick="pin('${g.id}')">Снять</button></div></div>`:'<div class="slot es">Свободное место</div>'}).join('')+'</div>'
+  +'<div class="sub" style="margin-top:10px">Друзья видят ваш ящик, когда вы обмениваетесь. Номера из ящика нельзя продать или передать, пока вы их не снимете.</div>';
+ }else if(tab=='tr'){
+  const a=TR.filter(t=>t.to_id===uid),b=TR.filter(t=>t.from_id===uid);
+  h+=(a.length?`<div class="sub" style="margin-bottom:6px">Входящие</div>`+a.map(trRow).join(''):'')+(b.length?`<div class="sub" style="margin:10px 0 6px">Исходящие</div>`+b.map(trRow).join(''):'');
+  if(!a.length&&!b.length)h='<div class="empty">Обменов нет.<br>Откройте «Коллекция», выберите номер и нажмите «Передать».</div>';
+ }else{
+  const tot=P.draws||1,net=P.sold-P.spent;
+  h+=`<div class="card"><div class="row"><span>Попыток</span><b>${P.draws}</b></div><div class="row"><span>Потрачено</span><b>${fmt(P.spent)}</b></div><div class="row"><span>Выручка с продаж</span><b>${fmt(P.sold)}</b></div><div class="row"><span>Бонусы за вход</span><b>${fmt(P.bonus)}</b></div><div class="row"><span>Итог (продажи − траты)</span><b style="color:${net>=0?'var(--mf)':'#ff5a5a'}">${net>=0?'+':''}${fmt(net)}</b></div></div>
+  <div class="card">${T.map((t,i)=>`<div style="margin-bottom:10px;--rc:${t.c}"><div class="row"><span><span class="dot" style="display:inline-block;margin-right:8px"></span>${t.n}</span><b>${P.rc[i]} <span class="sub">(${(P.rc[i]/tot*100).toFixed(2)}%)</span></b></div><div class="bar"><i style="width:${Math.min(100,P.rc[i]/tot*100)}%"></i></div></div>`).join('')}</div>
+  <div class="card row"><div><div class="sub">Аккаунт</div><b>${P.nick}</b></div><button class="btn ghost" onclick="logout()">Выйти</button></div>`;
+ }
+ const sy=$('main').scrollTop;$('main').innerHTML=h;$('main').scrollTop=sy;$('who').textContent='👤 '+P.nick;dock();coinsUI()}
+(async()=>{
+ try{const s=JSON.parse(localStorage.getItem('nh_ses')||'null');if(s&&s.uid){ses={at:s.at,rt:s.rt,exp:s.exp};uid=s.uid;await enter()}}catch(e){uid=null;ses=null}
+ render();
+ setInterval(()=>{if(uid&&!busy&&!(document.activeElement&&document.activeElement.tagName=='INPUT'))sync().catch(()=>{})},15000);
+})();
+</script>
+</body>
+</html>
