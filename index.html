@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0c1210">
 <title>Выбивание телефонных номеров</title>
+<link rel="manifest" href="manifest.json"><link rel="apple-touch-icon" href="icon-192.png">
 <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#eef2ef;--panel:#fff;--ink:#14201a;--mute:#69776f;--line:#d9e1db;--mf:#00b956;--bl:#ffc800;--bli:#221a00}
@@ -15,6 +16,7 @@ body{background:var(--bg);color:var(--ink);font:15px/1.4 system-ui,-apple-system
 .f{font-family:"Unbounded",system-ui,sans-serif}
 .ttl{margin:12px 14px 0;font:700 15px "Unbounded",system-ui,sans-serif;letter-spacing:-.3px}
 .row{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.av{width:46px;height:46px;border-radius:50%;border:2px solid rgba(255,255,255,.6);background:radial-gradient(circle at 30% 25%,rgba(255,255,255,.4),rgba(0,0,0,.28));color:inherit;font:800 20px/1 inherit;margin-right:12px;cursor:pointer;flex:none;box-shadow:0 2px 8px rgba(0,0,0,.3)}.av.big{width:72px;height:72px;font-size:32px;margin:0 14px 0 0;color:var(--text,#fff);background:linear-gradient(135deg,var(--mf),var(--bl,#ffd400));border-color:transparent}.prof{display:flex;align-items:center}
 .top{margin:10px 14px 4px;padding:14px 16px;border-radius:20px;background:linear-gradient(135deg,var(--acc),color-mix(in srgb,var(--acc) 55%,#000));color:var(--accink);display:flex;justify-content:space-between;align-items:center}
 .top small{opacity:.8;font-size:12px;display:block}
 .bal{font:700 26px "Unbounded",system-ui,sans-serif;letter-spacing:-1px}
@@ -66,17 +68,21 @@ input:focus{outline:none;border-color:var(--mf)}
 </head>
 <body>
 <div class="ttl row"><span>Выбивание телефонных номеров</span><span class="sub" id="who" style="font-weight:400;font-family:system-ui,sans-serif"></span></div>
-<div class="top"><div><small>Баланс</small><div class="bal" id="bal">0 ₽</div></div><div style="text-align:right"><small>Попытка</small><b class="f" style="font-size:15px">50 ₽</b></div></div>
+<div class="top"><div style="display:flex;align-items:center"><button class="av" id="av" onclick="go('st')"></button><div><small>Баланс</small><div class="bal" id="bal">0 ₽</div></div></div><div style="text-align:right"><small>Попытка</small><b class="f" style="font-size:15px">50 ₽</b></div></div>
 <main id="main"></main>
 <div id="dock"></div>
 <nav id="nav"></nav>
 <div id="auth" hidden></div>
 <div id="toast"></div>
 <script>
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 const API='https://gjzskojoqjlidgrsnmdb.supabase.co',KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdqenNrb2pvcWpsaWRncnNubWRiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE1Njk4MzEsImV4cCI6MjEwNzE0NTgzMX0.HtDGPROjXqq_6tAgSZ7blv4qZqNfpPfufI4IQQeIBmk';
-const T=[{n:'Обычный',c:'#8a939b',v:0,w:0,d:'Без красивого рисунка. Не продаётся.'},{n:'Средний',c:'#3fa7ff',v:1000,w:3,d:'Как бронза: три одинаковые цифры в конце, AABB, ABAB, ABBA.'},{n:'Эпический',c:'#b26bff',v:20000,w:.12,d:'Как платина: пять одинаковых цифр или 12345 в конце.'},{n:'Мифический',c:'#ff3d7f',v:250000,w:.006,d:'Как VIP: шесть или семь одинаковых цифр, 1234567.'}];
+const PR=[[30,65],[600,1800],[20000,150000],[150000,10000000]];
+function pv(g){const h=Number(String(g.num).replace(/\D/g,''))%1000003,r=PR[g.tier];let p=r[0]+(h*7919)%(r[1]-r[0]+1);if(p%10==0)p+=3;return p}
+const dur=x=>{x=Math.floor(x);const h=Math.floor(x/3600),m=Math.floor(x%3600/60);return h?h+' ч '+m+' мин':m+' мин'};
+const T=[{n:'Обычный',c:'#8a939b',v:0,w:0,d:'Без красивого рисунка. Продаётся по мелочи.'},{n:'Средний',c:'#3fa7ff',v:1000,w:3,d:'Как бронза: три одинаковые цифры в конце, AABB, ABAB, ABBA.'},{n:'Эпический',c:'#b26bff',v:20000,w:.12,d:'Как платина: пять одинаковых цифр или 12345 в конце.'},{n:'Мифический',c:'#ff3d7f',v:250000,w:.006,d:'Как VIP: шесть или семь одинаковых цифр, 1234567.'}];
 const OPS={m:'Мегафон',b:'Билайн'},SLOTS=6;
-const TABS=[['game','Игра'],['bag','Коллекция'],['case','Ящик'],['tr','Обмены'],['st','Итоги']];
+const TABS=[['game','Игра'],['bag','Коллекция'],['case','Ящик'],['tr','Обмены']];
 let ses=null,uid=null,P={coins:0,rc:[0,0,0,0],draws:0,spent:0,sold:0,bonus:0,nick:''},N=[],TR=[],NM={},PN={},tab='game',op='m',busy=false,dk=null,arm=null,amode='in',tradeFor=null,tnv='',peek=null,msg='';
 const $=id=>document.getElementById(id);
 const fmt=n=>Math.round(n).toLocaleString('ru-RU')+' ₽';
@@ -103,6 +109,7 @@ async function doAuth(){const nick=$('an').value.trim(),p=$('ap').value,er=t=>{$
   setSes(up?await authReq('/auth/v1/signup',{email,password:p,data:{nick}}):await authReq('/auth/v1/token?grant_type=password',{email,password:p}));
   await enter()}
  catch(e){ses=null;uid=null;const m=e.message;er(/already/i.test(m)?'Такой ник уже занят':/invalid login/i.test(m)?'Неверный ник или пароль':m)}}
+setInterval(()=>{if(uid&&!document.hidden){rpc('add_play',{p_sec:30}).catch(()=>{});P.play_sec=(P.play_sec||0)+30}},30000);
 async function enter(){tab='game';dk=null;msg='';try{if(await rpc('claim_bonus'))msg='Бонус за вход: +10 000 ₽'}catch(e){}await sync()}
 async function sync(){
  const [p,n,t]=await Promise.all([get('profiles?id=eq.'+uid),get('numbers?owner=eq.'+uid+'&order=tier.desc,created_at.desc'),get('trades?status=eq.pending&order=created_at.desc')]);
@@ -115,8 +122,9 @@ async function sync(){
 async function run(fn){try{await fn()}catch(e){toast(e.message);busy=false;render()}}
 function ask(k,fn){if(arm===k){arm=null;fn();return}arm=k;render();setTimeout(()=>{if(arm===k){arm=null;render()}},3000)}
 function setOp(o){op=o;render()}
+function sellCommon(){ask('common',()=>run(async()=>{await rpc('sell_common');await sync()}))}
 function go(t){tab=t;tradeFor=null;peek=null;render()}
-function pull(){run(async()=>{if(busy||P.coins<50)return;busy=true;msg='';dk={spin:1};dock();coinsUI();
+function pull(){run(async()=>{if(busy||P.coins<50)return;if(N.length>=300){msg='Коллекция заполнена (300 из 300). Продайте номера во вкладке «Коллекция».';render();return}busy=true;msg='';dk={spin:1};dock();coinsUI();
  const sp=(async()=>{for(let i=0;i<9;i++){const e=$('dn');if(e)e.textContent=`+7 (9${Math.random()*100|0}) ${100+Math.random()*900|0}-${10+Math.random()*90|0}-${10+Math.random()*90|0}`;await sleep(45)}})();
  const [g]=await Promise.all([rpc('draw',{p_op:op}),sp]);
  dk={g};busy=false;try{navigator.vibrate(g.tier*120)}catch(e){}
@@ -140,7 +148,7 @@ function dock(){const el=$('dock');
  if(!dk){el.style.setProperty('--rc','');el.innerHTML=sc(-1)+`<div class="dnum" style="font-size:15px;color:var(--mute)">Нажми на SIM, чтобы выбить номер</div><div class="dmeta"><span class="sub">Шкала редкости: чем правее, тем дороже</span></div>`;return}
  if(dk.spin){el.style.setProperty('--rc','');el.innerHTML=sc(-1)+`<div class="dnum" id="dn" style="color:var(--mute)">…</div><div class="dmeta"><span class="sub">Выбиваем номер</span></div>`;return}
  const g=dk.g,t=T[g.tier],it=g.id?N.find(x=>x.id===g.id):null;el.style.setProperty('--rc',t.c);
- const act=g.tier==0?'<span class="sub">Обычный номер, цена 0 ₽</span>':!it?'<span class="sub">Номер больше не у вас</span>':it.showcase?'<span class="sub">В ящике ✓</span>':`<span style="display:flex;gap:6px"><button class="btn ghost" onclick="pin('${g.id}')">В ящик</button><button class="btn" onclick="sellAsk('${g.id}')">${arm===g.id?'Точно?':'Продать '+fmt(t.v)}</button></span>`;
+ const act=!it?'<span class="sub">Номер больше не у вас</span>':it.showcase?'<span class="sub">В ящике ✓</span>':`<span style="display:flex;gap:6px">${g.tier>1?`<button class="btn ghost" onclick="pin('${g.id}')">Положить в ящик</button>`:''}<button class="btn" onclick="sellAsk('${g.id}')">${arm===g.id?'Точно?':'Продать '+fmt(pv(g))}</button></span>`;
  el.innerHTML=sc(g.tier)+`<div class="dnum">${g.num}</div><div class="dmeta"><span class="sub">${OPS[g.op]} · ${t.n}</span>${act}</div>`}
 function authView(){const el=$('auth');el.hidden=false;const up=amode=='up';
  el.innerHTML=`<div class="au"><div class="f" style="font-weight:700;font-size:20px;line-height:1.25;margin-bottom:6px">Выбивание телефонных номеров</div><div class="sub" style="margin-bottom:16px">${up?'Создайте аккаунт. Новый аккаунт получает 10 000 ₽':'Войдите в аккаунт, чтобы продолжить'}</div>
@@ -148,7 +156,7 @@ function authView(){const el=$('auth');el.hidden=false;const up=amode=='up';
  <input id="an" placeholder="Ник" autocomplete="username" maxlength="20"><input id="ap" type="password" placeholder="Пароль" autocomplete="${up?'new-password':'current-password'}">${up?'<input id="ap2" type="password" placeholder="Повторите пароль" autocomplete="new-password">':''}
  <div class="err" id="ae"></div><button class="btn" style="width:100%;padding:14px" onclick="doAuth()">${up?'Создать аккаунт':'Войти'}</button>
  <div class="sub" style="margin-top:14px">Аккаунт общий для всех устройств. Если забудете пароль, восстановить его нельзя.</div></div>`}
-function bagRow(g){const t=T[g.tier];return `<div class="card" style="border-left:6px solid ${t.c}"><div class="row"><div>${numHTML(g)}<div class="sub">${OPS[g.op]}${g.showcase?' · в ящике':''}</div></div><b>${fmt(t.v)}</b></div><div class="acts"><button class="btn ghost" onclick="pin('${g.id}')">${g.showcase?'Снять с ящика':'В ящик'}</button>${g.showcase?'':`<button class="btn ghost" onclick="startTrade('${g.id}')">Передать</button><button class="btn" onclick="sellAsk('${g.id}')">${arm===g.id?'Точно?':'Продать'}</button>`}</div></div>`}
+function bagRow(g){const t=T[g.tier];return `<div class="card" style="border-left:6px solid ${t.c}"><div class="row"><div>${numHTML(g)}<div class="sub">${OPS[g.op]}${g.showcase?' · в ящике':''}</div></div><b>${fmt(pv(g))}</b></div><div class="acts">${g.tier>1||g.showcase?`<button class="btn ghost" onclick="pin('${g.id}')">${g.showcase?'Снять с ящика':'В ящик'}</button>`:''}${g.showcase?'':`<button class="btn ghost" onclick="startTrade('${g.id}')">Передать</button><button class="btn" onclick="sellAsk('${g.id}')">${arm===g.id?'Точно?':'Продать '+fmt(pv(g))}</button>`}</div></div>`}
 function tradePanel(){const g=N.find(x=>x.id===tradeFor);if(!g)return'';
  return `<div class="card note"><b>Передать номер</b><div style="margin:6px 0 10px">${numHTML(g)}</div><input id="tn" placeholder="Ник друга" value="${tnv}" oninput="tnv=this.value" maxlength="20">
  <div class="acts"><button class="btn" onclick="offer()">Подарить</button><button class="btn ghost" onclick="peekBox()">Обмен: ящик игрока</button><button class="btn ghost" onclick="tradeFor=null;peek=null;render()">Отмена</button></div>
@@ -163,7 +171,7 @@ function render(){
  document.documentElement.style.setProperty('--acc',op=='b'?'var(--bl)':'var(--mf)');
  document.documentElement.style.setProperty('--accink',op=='b'?'var(--bli)':'#fff');
  const inc=TR.filter(t=>t.to_id===uid).length,pins=N.filter(g=>g.showcase);
- $('nav').innerHTML=TABS.map(t=>`<button class="${tab==t[0]?'on':''}" onclick="go('${t[0]}')">${t[1]}${t[0]=='tr'&&inc?' ('+inc+')':''}</button>`).join('');
+ {const a=$('av');if(a)a.textContent=(P.nick||'?')[0].toUpperCase()}$('nav').innerHTML=TABS.map(t=>`<button class="${tab==t[0]?'on':''}" onclick="go('${t[0]}')">${t[1]}${t[0]=='tr'&&inc?' ('+inc+')':''}</button>`).join('');
  let h='';
  if(tab=='game'){
   if(msg)h+=`<div class="card note"><b>${msg}</b></div>`;
@@ -171,13 +179,14 @@ function render(){
   <div class="stage"><button class="sim" onclick="pull()"><div class="chip"></div>Выбить<small>50 ₽</small></button></div>
   <div class="sub" style="text-align:center;margin:-6px 0 12px">Один тап = одна попытка. Обычные номера не сохраняются.</div>`;
   if(P.coins<50)h+=`<div class="card"><b>Не хватает на попытку.</b><div class="sub">Продайте номера из коллекции или вернитесь завтра за бонусом 10 000 ₽.</div></div>`;
-  h+=`<div class="card"><div class="sub" style="margin-bottom:6px">Рейтинг номеров: цена и шанс за одну попытку</div>${T.map((t,i)=>`<div class="tier" ${i?'':'style="border-top:0"'}><span class="dot" style="--rc:${t.c}"></span><div style="flex:1"><div class="row"><b>${t.n}</b><b>${fmt(t.v)}</b></div><div class="sub">${t.d}${i?' Шанс '+t.w+'%.':''}</div></div></div>`).join('')}</div>`;
+  h+=`<div class="card"><div class="sub" style="margin-bottom:6px">Рейтинг номеров: цена и шанс за одну попытку</div>${T.map((t,i)=>`<div class="tier" ${i?'':'style="border-top:0"'}><span class="dot" style="--rc:${t.c}"></span><div style="flex:1"><div class="row"><b>${t.n}</b><b>${i?fmt(PR[i][0])+' – '+fmt(PR[i][1]):'от '+PR[0][0]+' ₽'}</b></div><div class="sub">${t.d}${i?' Шанс '+t.w+'%.':''}</div></div></div>`).join('')}</div>`;
  }else if(tab=='bag'){
   h+=tradeFor?tradePanel():'';
+  {const cm=N.filter(x=>x.tier==0&&!x.showcase),cs=cm.reduce((a,x)=>a+pv(x),0),tv=N.reduce((a,x)=>a+pv(x),0);h+=`<div class="card"><div class="row"><div><div class="sub">Коллекция</div><b class="f">${N.length} / 300</b></div><div style="text-align:right"><div class="sub">Общая стоимость</div><b>${fmt(tv)}</b></div></div>${N.length>=300?'<div class="sub" style="color:#ff5a5a;margin-top:6px">Коллекция заполнена. Продайте номера, чтобы выбивать дальше.</div>':''}${cm.length?`<button class="btn" style="margin-top:10px;width:100%" onclick="sellCommon()">${arm==='common'?'Точно?':'Продать все обычные ('+cm.length+'): '+fmt(cs)}</button>`:''}</div>`}
   h+=N.length?N.map(bagRow).join(''):'<div class="empty">Пока пусто. Красивые номера появятся здесь.</div>';
  }else if(tab=='case'){
-  h+=`<div class="card row"><div><div class="sub">Ящик ценных номеров · ${pins.length}/${SLOTS}</div><b class="f">${fmt(pins.reduce((a,g)=>a+T[g.tier].v,0))}</b></div></div><div class="case">`
-  +Array.from({length:SLOTS},(_,i)=>{const g=pins[i];return g?`<div class="slot" style="--rc:${T[g.tier].c}"><div class="sub">${OPS[g.op]}</div><div class="num" style="font-size:17px">${g.num}</div><div class="row"><span class="sub">${T[g.tier].n} · ${fmt(T[g.tier].v)}</span><button class="btn ghost" onclick="pin('${g.id}')">Снять</button></div></div>`:'<div class="slot es">Свободное место</div>'}).join('')+'</div>'
+  h+=`<div class="card row"><div><div class="sub">Ящик ценных номеров · ${pins.length}/${SLOTS}</div><b class="f">${fmt(pins.reduce((a,g)=>a+pv(g),0))}</b></div></div><div class="case">`
+  +Array.from({length:SLOTS},(_,i)=>{const g=pins[i];return g?`<div class="slot" style="--rc:${T[g.tier].c}"><div class="sub">${OPS[g.op]}</div><div class="num" style="font-size:17px">${g.num}</div><div class="row"><span class="sub">${T[g.tier].n} · ${fmt(pv(g))}</span><button class="btn ghost" onclick="pin('${g.id}')">Снять</button></div></div>`:'<div class="slot es">Свободное место</div>'}).join('')+'</div>'
   +'<div class="sub" style="margin-top:10px">Друзья видят ваш ящик, когда вы обмениваетесь. Номера из ящика нельзя продать или передать, пока вы их не снимете.</div>';
  }else if(tab=='tr'){
   const a=TR.filter(t=>t.to_id===uid),b=TR.filter(t=>t.from_id===uid);
@@ -185,7 +194,7 @@ function render(){
   if(!a.length&&!b.length)h='<div class="empty">Обменов нет.<br>Откройте «Коллекция», выберите номер и нажмите «Передать».</div>';
  }else{
   const tot=P.draws||1,net=P.sold-P.spent;
-  h+=`<div class="card"><div class="row"><span>Попыток</span><b>${P.draws}</b></div><div class="row"><span>Потрачено</span><b>${fmt(P.spent)}</b></div><div class="row"><span>Выручка с продаж</span><b>${fmt(P.sold)}</b></div><div class="row"><span>Бонусы за вход</span><b>${fmt(P.bonus)}</b></div><div class="row"><span>Итог (продажи − траты)</span><b style="color:${net>=0?'var(--mf)':'#ff5a5a'}">${net>=0?'+':''}${fmt(net)}</b></div></div>
+  h+=`<div class="card prof"><div class="av big">${(P.nick||'?')[0].toUpperCase()}</div><div><b class="f" style="font-size:20px">${P.nick}</b><div class="sub">Время в игре: ${dur(P.play_sec||0)}</div></div></div><div class="card"><div class="row"><span>Время в игре</span><b>${dur(P.play_sec||0)}</b></div><div class="row"><span>Попыток</span><b>${P.draws}</b></div><div class="row"><span>Потрачено</span><b>${fmt(P.spent)}</b></div><div class="row"><span>Выручка с продаж</span><b>${fmt(P.sold)}</b></div><div class="row"><span>Бонусы за вход</span><b>${fmt(P.bonus)}</b></div><div class="row"><span>Итог (продажи − траты)</span><b style="color:${net>=0?'var(--mf)':'#ff5a5a'}">${net>=0?'+':''}${fmt(net)}</b></div></div>
   <div class="card">${T.map((t,i)=>`<div style="margin-bottom:10px;--rc:${t.c}"><div class="row"><span><span class="dot" style="display:inline-block;margin-right:8px"></span>${t.n}</span><b>${P.rc[i]} <span class="sub">(${(P.rc[i]/tot*100).toFixed(2)}%)</span></b></div><div class="bar"><i style="width:${Math.min(100,P.rc[i]/tot*100)}%"></i></div></div>`).join('')}</div>
   <div class="card row"><div><div class="sub">Аккаунт</div><b>${P.nick}</b></div><button class="btn ghost" onclick="logout()">Выйти</button></div>`;
  }
