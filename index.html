@@ -54,6 +54,7 @@ nav button{font-size:13px;font-weight:700}nav button.on{font-weight:800}
 .spin{width:58px;height:58px;border-radius:50%;border:6px solid color-mix(in srgb,var(--mf) 22%,transparent);border-top-color:var(--mf);animation:sp .8s linear infinite}
 @keyframes sp{to{transform:rotate(360deg)}}
 .ldt{font:700 17px "Unbounded",system-ui,sans-serif}
+#who{background:var(--panel);border:2px solid var(--line);padding:5px 13px;border-radius:999px;font-weight:800!important;color:var(--ink)!important;font-size:13px!important}
 .top{margin:10px 14px 4px;padding:14px 16px;border-radius:20px;background:linear-gradient(135deg,var(--acc),color-mix(in srgb,var(--acc) 55%,#000));color:var(--accink);display:flex;justify-content:space-between;align-items:center}
 .top small{opacity:.8;font-size:12px;display:block}
 .bal{font:700 26px "Unbounded",system-ui,sans-serif;letter-spacing:-1px}
@@ -251,7 +252,7 @@ function render(){
   <div class="card">${T.map((t,i)=>`<div style="margin-bottom:10px;--rc:${t.c}"><div class="row"><span><span class="dot" style="display:inline-block;margin-right:8px"></span>${t.n}</span><b>${P.rc[i]} <span class="sub">(${(P.rc[i]/tot*100).toFixed(2)}%)</span></b></div><div class="bar"><i style="width:${Math.min(100,P.rc[i]/tot*100)}%"></i></div></div>`).join('')}</div>
   `;
  }
- const sy=$('main').scrollTop;$('main').innerHTML=h;$('main').scrollTop=sy;$('who').textContent='👤 '+P.nick;dock();coinsUI()}
+ const sy=$('main').scrollTop;$('main').innerHTML=h;$('main').scrollTop=sy;$('who').textContent=P.nick?P.nick+' ›':'';dock();coinsUI()}
 (async()=>{
  const lt=setTimeout(()=>{$('lds').textContent='Сервер долго не отвечает. Проверьте интернет или включите VPN.';$('ldb').hidden=false},8000);
  try{const s=JSON.parse(localStorage.getItem('nh_ses')||'null');if(s&&s.uid){ses={at:s.at,rt:s.rt,exp:s.exp};uid=s.uid;await enter()}}catch(e){uid=null;ses=null}
