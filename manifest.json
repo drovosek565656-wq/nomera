@@ -1,0 +1,11 @@
+{
+  "name": "Выбивание телефонных номеров",
+  "short_name": "Номера",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0c1210",
+  "theme_color": "#0c1210",
+  "lang": "ru"
+}
