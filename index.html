@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0c1210">
 <title>Выбивание телефонных номеров</title>
 <link rel="manifest" href="manifest.json"><link rel="apple-touch-icon" href="icon-192.png">
-<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500..800&family=Unbounded:wght@500..700&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#eef2ef;--panel:#fff;--ink:#14201a;--mute:#69776f;--line:#d9e1db;--mf:#00b956;--bl:#ffc800;--bli:#221a00}
 @media (prefers-color-scheme:dark){:root{--bg:#0c1210;--panel:#151e19;--ink:#eaf1ec;--mute:#8a9a90;--line:#24312a}}
@@ -14,7 +14,7 @@
 html,body{height:100%;margin:0}
 body{background:var(--bg);color:var(--ink);font:15px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;display:flex;flex-direction:column;max-width:520px;margin:0 auto;padding-top:env(safe-area-inset-top,0px);user-select:none}
 .f{font-family:"Unbounded",system-ui,sans-serif}
-.ttl{margin:12px 14px 0;font:700 15px "Unbounded",system-ui,sans-serif;letter-spacing:-.3px}
+.ttl{margin:12px 14px 0;font:700 15px "Unbounded","Montserrat",system-ui,sans-serif}
 .row{display:flex;justify-content:space-between;align-items:center;gap:10px}
 .av{width:46px;height:46px;border-radius:50%;border:2px solid rgba(255,255,255,.6);background:radial-gradient(circle at 30% 25%,rgba(255,255,255,.4),rgba(0,0,0,.28));color:inherit;font:800 20px/1 inherit;margin-right:12px;cursor:pointer;flex:none;box-shadow:0 2px 8px rgba(0,0,0,.3)}.av.big{width:72px;height:72px;font-size:32px;margin:0 14px 0 0;color:var(--text,#fff);background:linear-gradient(135deg,var(--mf),var(--bl,#ffd400));border-color:transparent}.prof{display:flex;align-items:center}
 :root[data-mode=dark]{--bg:#0c1210;--panel:#151e19;--ink:#eaf1ec;--mute:#8a9a90;--line:#24312a}
@@ -45,9 +45,7 @@ body.big{font-size:17px}
 
 .stage{filter:drop-shadow(0 14px 16px rgba(0,0,0,.28))}
 .sim svg{display:block;pointer-events:none}
-body{font-weight:500}.sub{font-weight:600}.card b,.row b{font-weight:800}
-nav button{font-size:13px;font-weight:700}nav button.on{font-weight:800}
-.top small{font-weight:700}.btn{font-weight:800}.ttl{font-weight:800}
+.card b,.row b{font-weight:700}
 .top .av{display:grid;place-items:center;width:48px;height:48px;border:2.5px solid rgba(255,255,255,.92);background:rgba(255,255,255,.22);box-shadow:0 0 0 3px rgba(255,255,255,.25),0 4px 12px rgba(0,0,0,.25);font:800 20px "Unbounded",system-ui,sans-serif;color:inherit}
 #ld{position:fixed;inset:0;z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;background:var(--bg);padding:24px;text-align:center}
 #ld[hidden]{display:none}
@@ -69,7 +67,7 @@ nav button.on{color:var(--ink);box-shadow:inset 0 3px 0 var(--acc)}
 .sim{width:168px;height:214px;padding:0;border:0;background:none;display:block;clip-path:polygon(0 0,66% 0,100% 20%,100% 100%,0 100%);transition:transform .08s}
 .sim:active:not(:disabled){transform:scale(.94)}
 .sim:disabled{opacity:.4}
-.sim small{font:600 13px system-ui;opacity:.85}
+.sim small{font:600 13px var(--font);opacity:.85}
 .chip{width:70px;height:52px;border-radius:7px;border:3px solid currentColor;background:repeating-linear-gradient(0deg,transparent 0 12px,currentColor 12px 15px);opacity:.7}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:10px}
 .sub{color:var(--mute);font-size:12px}
@@ -104,25 +102,43 @@ input:focus{outline:none;border-color:var(--mf)}
 #toast.on{opacity:1}
 
 /* типографика */
-:root{--font:"Inter","SF Pro Text","Segoe UI",Roboto,system-ui,-apple-system,sans-serif;--mute:#586860}
+:root{--font:"Montserrat","Inter","Segoe UI",Roboto,system-ui,-apple-system,sans-serif;--fd:"Unbounded","Montserrat",system-ui,sans-serif;--mute:#586860}
 @media (prefers-color-scheme:dark){:root{--mute:#a6b7ad}}
 :root[data-mode=dark]{--mute:#a6b7ad}:root[data-mode=light]{--mute:#586860}
 body,button,input{font-family:var(--font)}
-body{font-size:15.5px;line-height:1.45;letter-spacing:.1px;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
-.sub{font-size:13px;line-height:1.4}
-.ttl{font-size:16px;letter-spacing:-.2px;margin-top:14px;line-height:1.25}
+body{font-size:14.5px;line-height:1.5;font-weight:500;letter-spacing:.15px;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility;font-kerning:normal}
+body.big{font-size:16.5px}
+.f,.ttl,.h2,.num,.bal,.dnum,.ldt{font-family:var(--fd)}
+.sub{font-size:12.5px;line-height:1.45;font-weight:500;letter-spacing:.2px}
+.ttl{font-size:15px;font-weight:700;letter-spacing:.2px;margin-top:14px;line-height:1.3}
 .card{padding:15px 16px}
-.card .row{padding:3px 0}
+.card .row{padding:4px 0}
 .row span{font-weight:600}
-.num{font-size:17px;letter-spacing:-.3px}
-.h2{font-size:14px;letter-spacing:.2px}
-.mi{font-size:15.5px}.mi small{font-size:13px;margin-top:2px}
-nav button{letter-spacing:.2px}
-.btn{letter-spacing:.2px}
+.num{font-size:16px;font-weight:600;letter-spacing:.3px}
+.bal{font-weight:700;letter-spacing:0}
+.dnum{font-weight:600;letter-spacing:.3px}
+.ldt{font-weight:600}
+.h2{font-size:13px;font-weight:600;letter-spacing:.4px}
+.hn{font-weight:600}
+.mi{font-size:14.5px;font-weight:600}.mi small{font-size:12.5px;margin-top:3px;font-weight:500}
+.btn{font-weight:700;letter-spacing:.3px}
+.op,.sg button,.sw{font-weight:600;letter-spacing:.2px}
+nav button{font-size:12px;font-weight:600;letter-spacing:.3px}nav button.on{font-weight:700}
+.seg{font-size:10.5px;font-weight:700;letter-spacing:.2px}
+.chips span{font-weight:600;letter-spacing:.2px}
+#who{font-weight:700!important;font-size:12.5px!important;font-family:var(--font)!important}
+.top .av{font-family:var(--fd);font-weight:600}
+.top small{font-weight:600;letter-spacing:.3px}
+#toast{font-size:13.5px;font-weight:600}
+/* нижняя панель: овальные кнопки */
+nav{gap:6px;padding:8px 10px calc(8px + env(safe-area-inset-bottom,0px))}
+nav button{flex:1 1 auto;min-width:0;padding:11px 6px;border-radius:999px;border:1px solid var(--line);background:var(--bg);color:var(--mute);font-size:12px;font-weight:600;letter-spacing:.2px;line-height:1;white-space:nowrap;text-align:center;box-shadow:none;transition:background .15s,color .15s,border-color .15s,transform .08s}
+nav button:active{transform:scale(.96)}
+nav button.on{background:var(--acc);border-color:var(--acc);color:var(--accink);font-weight:700;box-shadow:0 6px 14px -8px var(--acc)}
 </style>
 </head>
 <body>
-<div class="ttl row"><span>Выбивание телефонных номеров</span><span class="sub" id="who" onclick="go('pf')" style="cursor:pointer;font-weight:400;font-family:system-ui,sans-serif"></span></div>
+<div class="ttl row"><span>Выбивание телефонных номеров</span><span class="sub" id="who" onclick="go('pf')" style="cursor:pointer;font-weight:700"></span></div>
 <div class="top"><div style="display:flex;align-items:center"><button class="av" id="av" onclick="go('pf')"></button><div><small>Баланс</small><div class="bal" id="bal">0 ₽</div></div></div><div style="text-align:right"><small>Попытка</small><b class="f" style="font-size:15px">50 ₽</b></div></div>
 <main id="main"></main>
 <div id="dock"></div>
@@ -181,7 +197,7 @@ async function sync(){
 async function run(fn){try{await fn()}catch(e){toast(e.message);busy=false;render()}}
 function ask(k,fn){if(arm===k){arm=null;fn();return}arm=k;render();setTimeout(()=>{if(arm===k){arm=null;render()}},3000)}
 function simSVG(o){const b=o=='b',c1=b?'#ffd21a':'#14cf6e',c2=b?'#ffb300':'#007c3c',ink=b?'#111':'#fff',d='M12 0H112L168 44V202Q168 214 156 214H12Q0 214 0 202V12Q0 0 12 0Z';
-return `<svg viewBox="0 0 168 214" width="168" height="214"><defs><linearGradient id="sg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${c1}"/><stop offset="1" stop-color="${c2}"/></linearGradient><pattern id="st" width="16" height="16" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="8" height="16" fill="#000"/></pattern></defs><path d="${d}" fill="url(#sg)"/>${b?`<path d="${d}" fill="url(#st)" opacity=".16"/>`:''}<path d="${d}" fill="none" stroke="rgba(0,0,0,.22)" stroke-width="2"/><rect x="40" y="60" width="88" height="68" rx="10" fill="#f0d276" stroke="#8a6b12" stroke-width="2.5"/><path d="M40 94H128M84 60V128M40 77H68M100 77H128M40 111H68M100 111H128" stroke="#8a6b12" stroke-width="2.5" fill="none"/><text x="84" y="166" text-anchor="middle" font-family="Unbounded,system-ui,sans-serif" font-weight="700" font-size="21" fill="${ink}">Выбить</text><text x="84" y="192" text-anchor="middle" font-family="system-ui,sans-serif" font-weight="800" font-size="15" fill="${ink}" opacity=".85">50 ₽</text></svg>`}
+return `<svg viewBox="0 0 168 214" width="168" height="214"><defs><linearGradient id="sg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${c1}"/><stop offset="1" stop-color="${c2}"/></linearGradient><pattern id="st" width="16" height="16" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="8" height="16" fill="#000"/></pattern></defs><path d="${d}" fill="url(#sg)"/>${b?`<path d="${d}" fill="url(#st)" opacity=".16"/>`:''}<path d="${d}" fill="none" stroke="rgba(0,0,0,.22)" stroke-width="2"/><rect x="40" y="60" width="88" height="68" rx="10" fill="#f0d276" stroke="#8a6b12" stroke-width="2.5"/><path d="M40 94H128M84 60V128M40 77H68M100 77H128M40 111H68M100 111H128" stroke="#8a6b12" stroke-width="2.5" fill="none"/><text x="84" y="166" text-anchor="middle" font-family="Unbounded,Montserrat,system-ui,sans-serif" font-weight="600" font-size="20" letter-spacing="0.3" fill="${ink}">Выбить</text><text x="84" y="192" text-anchor="middle" font-family="Montserrat,system-ui,sans-serif" font-weight="700" font-size="15" letter-spacing="0.3" fill="${ink}" opacity=".85">50 ₽</text></svg>`}
 function setOp(o){op=o;render()}
 function sellCommon(){ask('common',()=>run(async()=>{await rpc('sell_common');await sync()}))}
 function go(t){tab=t;tradeFor=null;peek=null;render()}
