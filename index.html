@@ -301,7 +301,9 @@ function render(){
  }
  const sy=$('main').scrollTop;$('main').innerHTML=h;$('main').scrollTop=sy;$('who').textContent=P.nick?P.nick+' ›':'';dock();coinsUI()}
 (async()=>{
- const lt=setTimeout(()=>{$('lds').textContent='Сервер долго не отвечает. Проверьте интернет или включите VPN.';$('ldb').hidden=false},8000);
+ const lt=setTimeout(()=>{$('lds').textContent='Сервер долго не отвечает. Проверьте интернет или включите VPN.';$('ldb').hidden=false;
+  const ping=async u=>{const c=new AbortController(),t=setTimeout(()=>c.abort(),6000);try{await fetch(u+'/auth/v1/health',{mode:'no-cors',signal:c.signal});clearTimeout(t);return '✓ доступен'}catch(e){clearTimeout(t);return '✗ нет связи'}};
+  Promise.all([ping(PX),ping(API)]).then(r=>{$('lds').innerHTML+='<br><br>Диагностика:<br>Прокси: '+r[0]+'<br>Supabase напрямую: '+r[1]})},8000);
  try{const s=JSON.parse(localStorage.getItem('nh_ses')||'null');if(s&&s.uid){ses={at:s.at,rt:s.rt,exp:s.exp};uid=s.uid;await enter()}}catch(e){uid=null;ses=null}
  clearTimeout(lt);$('ld').hidden=true;
  render();
