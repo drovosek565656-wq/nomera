@@ -144,6 +144,14 @@ nav button{font-size:13.5px;font-weight:700}
 <script>
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 const API='https://gjzskojoqjlidgrsnmdb.supabase.co',KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdqenNrb2pvcWpsaWRncnNubWRiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE1Njk4MzEsImV4cCI6MjEwNzE0NTgzMX0.HtDGPROjXqq_6tAgSZ7blv4qZqNfpPfufI4IQQeIBmk';
+const PX='https://nomeraproxy.drovosek565656.workers.dev';
+let BASE=null;try{BASE=localStorage.getItem('nh_base')}catch(e){}
+async function sfetch(path,o){const order=BASE===API?[API,PX]:[PX,API];let err;
+ for(let i=0;i<2;i++){const b=order[i],ctl=new AbortController(),t=i==0?setTimeout(()=>ctl.abort(),BASE?25000:9000):0;
+  try{const r=await fetch(b+path,{...o,signal:ctl.signal});clearTimeout(t);if(BASE!==b){BASE=b;try{localStorage.setItem('nh_base',b)}catch(e){}}return r}
+  catch(e){clearTimeout(t);err=e}}
+ throw err||new Error('Failed to fetch')}
+
 let S={acc:'op',mode:'auto',vib:1,big:0};try{Object.assign(S,JSON.parse(localStorage.getItem('nh_set')||'{}'))}catch(e){}
 function setS(k,v){S[k]=v;try{localStorage.setItem('nh_set',JSON.stringify(S))}catch(e){}render()}
 const AC={green:['#00b956','#fff','Зелёный'],yellow:['#ffc800','#221a00','Жёлтый'],blue:['#1e9bff','#fff','Голубой'],violet:['#8b5cf6','#fff','Фиолетовый'],pink:['#ff3d7f','#fff','Розовый']};
@@ -158,12 +166,12 @@ const $=id=>document.getElementById(id);
 const fmt=n=>Math.round(n).toLocaleString('ru-RU')+' ₽';
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 function toast(t){const e=$('toast');e.textContent=t;e.className='on';clearTimeout(toast.t);toast.t=setTimeout(()=>e.className='',3500)}
-async function authReq(path,body){const r=await fetch(API+path,{method:'POST',headers:{apikey:KEY,'Content-Type':'application/json'},body:JSON.stringify(body)});const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.msg||j.message||j.error_description||j.error||'Ошибка '+r.status);return j}
+async function authReq(path,body){const r=await sfetch(path,{method:'POST',headers:{apikey:KEY,'Content-Type':'application/json'},body:JSON.stringify(body)});const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.msg||j.message||j.error_description||j.error||'Ошибка '+r.status);return j}
 function setSes(j){if(!j.access_token)throw new Error('Включено подтверждение почты (выключите Confirm email в Supabase)');ses={at:j.access_token,rt:j.refresh_token,exp:j.expires_at||Date.now()/1000+j.expires_in};uid=j.user.id;try{localStorage.setItem('nh_ses',JSON.stringify({...ses,uid}))}catch(e){}}
 async function refresh(){setSes(await authReq('/auth/v1/token?grant_type=refresh_token',{refresh_token:ses.rt}))}
 async function api(path,opt={}){
  if(ses&&ses.exp-Date.now()/1000<60){try{await refresh()}catch(e){logout();throw e}}
- const r=await fetch(API+path,{...opt,headers:{apikey:KEY,Authorization:'Bearer '+(ses?ses.at:KEY),'Content-Type':'application/json'}});
+ const r=await sfetch(path,{...opt,headers:{apikey:KEY,Authorization:'Bearer '+(ses?ses.at:KEY),'Content-Type':'application/json'}});
  const t=await r.text();let j=null;try{j=t?JSON.parse(t):null}catch(e){j=t}
  if(!r.ok)throw new Error((j&&(j.message||j.msg))||'Ошибка '+r.status);return j}
 const rpc=(f,a)=>api('/rest/v1/rpc/'+f,{method:'POST',body:JSON.stringify(a||{})});
