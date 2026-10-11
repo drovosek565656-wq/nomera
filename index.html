@@ -6,15 +6,15 @@
 <meta name="theme-color" content="#0c1210">
 <title>Выбивание телефонных номеров</title>
 <link rel="manifest" href="manifest.json"><link rel="apple-touch-icon" href="icon-192.png">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500..800&family=Unbounded:wght@500..700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#eef2ef;--panel:#fff;--ink:#14201a;--mute:#69776f;--line:#d9e1db;--mf:#00b956;--bl:#ffc800;--bli:#221a00}
 @media (prefers-color-scheme:dark){:root{--bg:#0c1210;--panel:#151e19;--ink:#eaf1ec;--mute:#8a9a90;--line:#24312a}}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;margin:0}
 body{background:var(--bg);color:var(--ink);font:15px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;display:flex;flex-direction:column;max-width:520px;margin:0 auto;padding-top:env(safe-area-inset-top,0px);user-select:none}
-.f{font-family:"Unbounded",system-ui,sans-serif}
-.ttl{margin:12px 14px 0;font:700 15px "Unbounded","Montserrat",system-ui,sans-serif}
+.f{font-family:var(--font);font-weight:800}
+.ttl{margin:12px 14px 0;font:700 15px var(--font);letter-spacing:-.3px}
 .row{display:flex;justify-content:space-between;align-items:center;gap:10px}
 .av{width:46px;height:46px;border-radius:50%;border:2px solid rgba(255,255,255,.6);background:radial-gradient(circle at 30% 25%,rgba(255,255,255,.4),rgba(0,0,0,.28));color:inherit;font:800 20px/1 inherit;margin-right:12px;cursor:pointer;flex:none;box-shadow:0 2px 8px rgba(0,0,0,.3)}.av.big{width:72px;height:72px;font-size:32px;margin:0 14px 0 0;color:var(--text,#fff);background:linear-gradient(135deg,var(--mf),var(--bl,#ffd400));border-color:transparent}.prof{display:flex;align-items:center}
 :root[data-mode=dark]{--bg:#0c1210;--panel:#151e19;--ink:#eaf1ec;--mute:#8a9a90;--line:#24312a}
@@ -41,21 +41,23 @@ body.big{font-size:17px}
 .tgl button{width:50px;height:28px;border-radius:14px;border:0;background:var(--line);position:relative;flex:none}
 .tgl button::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;transition:left .15s}
 .tgl button.on{background:var(--acc)}.tgl button.on::after{left:25px}
-.h2{font:700 13px "Unbounded",system-ui,sans-serif;margin:2px 0 10px}
+.h2{font:700 13px var(--font);margin:2px 0 10px}
 
 .stage{filter:drop-shadow(0 14px 16px rgba(0,0,0,.28))}
 .sim svg{display:block;pointer-events:none}
-.card b,.row b{font-weight:700}
-.top .av{display:grid;place-items:center;width:48px;height:48px;border:2.5px solid rgba(255,255,255,.92);background:rgba(255,255,255,.22);box-shadow:0 0 0 3px rgba(255,255,255,.25),0 4px 12px rgba(0,0,0,.25);font:800 20px "Unbounded",system-ui,sans-serif;color:inherit}
+body{font-weight:500}.sub{font-weight:600}.card b,.row b{font-weight:800}
+nav button{font-size:13px;font-weight:700}nav button.on{font-weight:800}
+.top small{font-weight:700}.btn{font-weight:800}.ttl{font-weight:800}
+.top .av{display:grid;place-items:center;width:48px;height:48px;border:2.5px solid rgba(255,255,255,.92);background:rgba(255,255,255,.22);box-shadow:0 0 0 3px rgba(255,255,255,.25),0 4px 12px rgba(0,0,0,.25);font:800 20px var(--font);color:inherit}
 #ld{position:fixed;inset:0;z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;background:var(--bg);padding:24px;text-align:center}
 #ld[hidden]{display:none}
 .spin{width:58px;height:58px;border-radius:50%;border:6px solid color-mix(in srgb,var(--mf) 22%,transparent);border-top-color:var(--mf);animation:sp .8s linear infinite}
 @keyframes sp{to{transform:rotate(360deg)}}
-.ldt{font:700 17px "Unbounded",system-ui,sans-serif}
-#who{background:var(--panel);border:2px solid var(--line);padding:5px 13px;border-radius:999px;font-weight:800!important;color:var(--ink)!important;font-size:13px!important}
+.ldt{font:700 17px var(--font)}
+#who{white-space:nowrap;flex:none;background:var(--panel);border:2px solid var(--line);padding:5px 13px;border-radius:999px;font-weight:800!important;color:var(--ink)!important;font-size:13px!important}
 .top{margin:10px 14px 4px;padding:14px 16px;border-radius:20px;background:linear-gradient(135deg,var(--acc),color-mix(in srgb,var(--acc) 55%,#000));color:var(--accink);display:flex;justify-content:space-between;align-items:center}
 .top small{opacity:.8;font-size:12px;display:block}
-.bal{font:700 26px "Unbounded",system-ui,sans-serif;letter-spacing:-1px}
+.bal{font:700 26px var(--font);letter-spacing:-1px}
 main{flex:1;overflow-y:auto;padding:10px 14px 14px}
 nav{display:flex;border-top:1px solid var(--line);background:var(--panel);padding-bottom:env(safe-area-inset-bottom,0px)}
 nav button{flex:1;padding:12px 0;background:none;border:0;color:var(--mute);font:inherit;font-size:12.5px;font-weight:600}
@@ -67,7 +69,7 @@ nav button.on{color:var(--ink);box-shadow:inset 0 3px 0 var(--acc)}
 .sim{width:168px;height:214px;padding:0;border:0;background:none;display:block;clip-path:polygon(0 0,66% 0,100% 20%,100% 100%,0 100%);transition:transform .08s}
 .sim:active:not(:disabled){transform:scale(.94)}
 .sim:disabled{opacity:.4}
-.sim small{font:600 13px var(--font);opacity:.85}
+.sim small{font:600 13px system-ui;opacity:.85}
 .chip{width:70px;height:52px;border-radius:7px;border:3px solid currentColor;background:repeating-linear-gradient(0deg,transparent 0 12px,currentColor 12px 15px);opacity:.7}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:10px}
 .sub{color:var(--mute);font-size:12px}
@@ -81,7 +83,7 @@ nav button.on{color:var(--ink);box-shadow:inset 0 3px 0 var(--acc)}
 .acts{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
 .empty{color:var(--mute);text-align:center;padding:30px 0}
 .note{background:color-mix(in srgb,var(--mf) 18%,var(--panel));border-color:var(--mf)}
-.num{font:700 16px "Unbounded",system-ui,sans-serif;color:var(--rc);letter-spacing:-.5px}
+.num{font:700 16px var(--font);color:var(--rc);letter-spacing:-.5px}
 .case{display:grid;gap:10px;padding:12px;border-radius:18px;background:linear-gradient(160deg,color-mix(in srgb,var(--ink) 8%,var(--panel)),var(--panel));border:1px solid var(--line)}
 .slot{border-radius:12px;padding:10px 12px;background:var(--bg);border:2px solid var(--rc);box-shadow:0 0 22px -8px var(--rc);display:flex;flex-direction:column;gap:3px}
 .slot.es{border:2px dashed var(--line);box-shadow:none;color:var(--mute);text-align:center;padding:16px;font-size:13px}
@@ -89,7 +91,7 @@ nav button.on{color:var(--ink);box-shadow:inset 0 3px 0 var(--acc)}
 .scale{display:flex;gap:4px;margin-bottom:8px}
 .seg{flex:1;text-align:center;font-size:11px;font-weight:700;padding:5px 0;border-radius:7px;background:var(--line);color:var(--mute);transition:all .25s}
 .seg.on{background:var(--c);color:#111;box-shadow:0 0 16px -2px var(--c);transform:translateY(-2px)}
-.dnum{font:700 20px "Unbounded",system-ui,sans-serif;text-align:center;letter-spacing:-.5px;color:var(--rc,var(--ink))}
+.dnum{font:700 20px var(--font);text-align:center;letter-spacing:-.5px;color:var(--rc,var(--ink))}
 .dmeta{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:6px;min-height:36px}
 input{width:100%;padding:13px 14px;border-radius:12px;border:2px solid var(--line);background:var(--panel);color:var(--ink);font:inherit;margin-bottom:10px;-webkit-user-select:text;user-select:text}
 input:focus{outline:none;border-color:var(--mf)}
@@ -102,43 +104,36 @@ input:focus{outline:none;border-color:var(--mf)}
 #toast.on{opacity:1}
 
 /* типографика */
-:root{--font:"Montserrat","Inter","Segoe UI",Roboto,system-ui,-apple-system,sans-serif;--fd:"Unbounded","Montserrat",system-ui,sans-serif;--mute:#586860}
+:root{--font:"Montserrat","Inter","SF Pro Text","Segoe UI",Roboto,system-ui,-apple-system,sans-serif;--mute:#586860}
 @media (prefers-color-scheme:dark){:root{--mute:#a6b7ad}}
 :root[data-mode=dark]{--mute:#a6b7ad}:root[data-mode=light]{--mute:#586860}
 body,button,input{font-family:var(--font)}
-body{font-size:14.5px;line-height:1.5;font-weight:500;letter-spacing:.15px;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility;font-kerning:normal}
-body.big{font-size:16.5px}
-.f,.ttl,.h2,.num,.bal,.dnum,.ldt{font-family:var(--fd)}
-.sub{font-size:12.5px;line-height:1.45;font-weight:500;letter-spacing:.2px}
-.ttl{font-size:15px;font-weight:700;letter-spacing:.2px;margin-top:14px;line-height:1.3}
+body{font-size:15.5px;line-height:1.45;letter-spacing:.1px;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+.sub{font-size:13px;line-height:1.4}
+.ttl{font-size:16px;letter-spacing:-.2px;margin-top:14px;line-height:1.25}
 .card{padding:15px 16px}
-.card .row{padding:4px 0}
+.card .row{padding:3px 0}
 .row span{font-weight:600}
-.num{font-size:16px;font-weight:600;letter-spacing:.3px}
-.bal{font-weight:700;letter-spacing:0}
-.dnum{font-weight:600;letter-spacing:.3px}
-.ldt{font-weight:600}
-.h2{font-size:13px;font-weight:600;letter-spacing:.4px}
-.hn{font-weight:600}
-.mi{font-size:14.5px;font-weight:600}.mi small{font-size:12.5px;margin-top:3px;font-weight:500}
-.btn{font-weight:700;letter-spacing:.3px}
-.op,.sg button,.sw{font-weight:600;letter-spacing:.2px}
-nav button{font-size:12px;font-weight:600;letter-spacing:.3px}nav button.on{font-weight:700}
-.seg{font-size:10.5px;font-weight:700;letter-spacing:.2px}
-.chips span{font-weight:600;letter-spacing:.2px}
-#who{font-weight:700!important;font-size:12.5px!important;font-family:var(--font)!important}
-.top .av{font-family:var(--fd);font-weight:600}
-.top small{font-weight:600;letter-spacing:.3px}
-#toast{font-size:13.5px;font-weight:600}
-/* нижняя панель: овальные кнопки */
-nav{gap:6px;padding:8px 10px calc(8px + env(safe-area-inset-bottom,0px))}
-nav button{flex:1 1 auto;min-width:0;padding:11px 6px;border-radius:999px;border:1px solid var(--line);background:var(--bg);color:var(--mute);font-size:12px;font-weight:600;letter-spacing:.2px;line-height:1;white-space:nowrap;text-align:center;box-shadow:none;transition:background .15s,color .15s,border-color .15s,transform .08s}
-nav button:active{transform:scale(.96)}
-nav button.on{background:var(--acc);border-color:var(--acc);color:var(--accink);font-weight:700;box-shadow:0 6px 14px -8px var(--acc)}
+.num{font-size:17px;letter-spacing:-.3px}
+.h2{font-size:14px;letter-spacing:.2px}
+.mi{font-size:15.5px}.mi small{font-size:13px;margin-top:2px}
+nav button{letter-spacing:.2px}
+.btn{letter-spacing:.2px}
+
+/* шрифт: шире и крупнее */
+body{font-size:16px;font-weight:600;letter-spacing:.15px}
+.ttl{font-size:17px;font-weight:800;letter-spacing:0}
+.bal{font-size:28px;font-weight:800;letter-spacing:-.3px}
+.sub{font-size:13.5px;font-weight:600}
+.num{font-size:17px;font-weight:800;letter-spacing:0}
+nav button{font-size:13.5px;font-weight:700}
+.btn{font-size:14.5px}
+.row span{font-weight:600}
+.mi{font-weight:700}
 </style>
 </head>
 <body>
-<div class="ttl row"><span>Выбивание телефонных номеров</span><span class="sub" id="who" onclick="go('pf')" style="cursor:pointer;font-weight:700"></span></div>
+<div class="ttl row"><span>Выбивание телефонных номеров</span><span class="sub" id="who" onclick="go('pf')" style="cursor:pointer;font-weight:400;font-family:system-ui,sans-serif"></span></div>
 <div class="top"><div style="display:flex;align-items:center"><button class="av" id="av" onclick="go('pf')"></button><div><small>Баланс</small><div class="bal" id="bal">0 ₽</div></div></div><div style="text-align:right"><small>Попытка</small><b class="f" style="font-size:15px">50 ₽</b></div></div>
 <main id="main"></main>
 <div id="dock"></div>
@@ -175,15 +170,25 @@ const rpc=(f,a)=>api('/rest/v1/rpc/'+f,{method:'POST',body:JSON.stringify(a||{})
 const get=q=>api('/rest/v1/'+q);
 async function mail(n){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(n.toLowerCase()));return 'u'+[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('').slice(0,40)+'@nomer-game.app'}
 function logout(){ses=null;uid=null;try{localStorage.removeItem('nh_ses')}catch(e){}dk=null;tradeFor=null;peek=null;amode='in';render()}
+function ruErr(m){m=String(m||'');const ru=/[А-Яа-яЁё]/.test(m);
+if(/failed to fetch|networkerror|load failed|network request/i.test(m))return 'Нет связи с сервером. Проверьте интернет (возможно, нужен VPN) и повторите.';
+if(ru)return m;
+if(/already/i.test(m))return 'Такой ник уже занят';
+if(/invalid login|invalid credentials/i.test(m))return 'Неверный ник или пароль';
+if(/at least|weak|short/i.test(m))return 'Пароль слишком короткий (минимум 6 символов)';
+if(/rate limit|too many|security purposes/i.test(m))return 'Слишком много попыток. Подождите минуту и повторите.';
+if(/jwt|expired|not authenticated|token/i.test(m))return 'Сессия истекла. Выйдите и войдите снова.';
+return 'Что-то пошло не так. Повторите попытку.'}
 async function doAuth(){const nick=$('an').value.trim(),p=$('ap').value,er=t=>{$('ae').textContent=t},up=amode=='up';
  if(!/^[A-Za-zА-Яа-яЁё0-9_.-]{3,20}$/.test(nick))return er('Ник: 3–20 символов, буквы, цифры, _ . -');
  if(p.length<6)return er('Пароль: минимум 6 символов');
  if(up&&p!==$('ap2').value)return er('Пароли не совпадают');
  er('Подождите…');
  try{const email=await mail(nick);
-  setSes(up?await authReq('/auth/v1/signup',{email,password:p,data:{nick}}):await authReq('/auth/v1/token?grant_type=password',{email,password:p}));
+  let j;if(up){try{j=await authReq('/auth/v1/signup',{email,password:p,data:{nick}})}catch(e2){if(/already/i.test(e2.message)){j=await authReq('/auth/v1/token?grant_type=password',{email,password:p}).catch(()=>{throw new Error('Такой ник уже занят. Если это ваш аккаунт, нажмите «Вход» и введите пароль.')})}else throw e2}}else j=await authReq('/auth/v1/token?grant_type=password',{email,password:p});
+  setSes(j);
   await enter()}
- catch(e){ses=null;uid=null;const m=e.message;er(/already/i.test(m)?'Такой ник уже занят':/invalid login/i.test(m)?'Неверный ник или пароль':m)}}
+ catch(e){ses=null;uid=null;const m=e.message;er(ruErr(m))}}
 setInterval(()=>{if(uid&&!document.hidden){rpc('add_play',{p_sec:30}).catch(()=>{});P.play_sec=(P.play_sec||0)+30}},30000);
 async function enter(){tab='game';dk=null;msg='';try{if(await rpc('claim_bonus'))msg='Бонус за вход: +10 000 ₽'}catch(e){}await sync()}
 async function sync(){
@@ -194,13 +199,14 @@ async function sync(){
  if(ids.length)(await get('numbers?id=in.('+ids.join(',')+')')).forEach(x=>NM[x.id]=x);
  if(pids.length)(await get('profiles?select=id,nick&id=in.('+pids.join(',')+')')).forEach(x=>PN[x.id]=x.nick);
  render()}
-async function run(fn){try{await fn()}catch(e){toast(e.message);busy=false;render()}}
+async function run(fn){try{await fn()}catch(e){toast(ruErr(e.message));busy=false;render()}}
 function ask(k,fn){if(arm===k){arm=null;fn();return}arm=k;render();setTimeout(()=>{if(arm===k){arm=null;render()}},3000)}
+function pl(n,a,b,c){n=Math.abs(n)%100;const m=n%10;return n>10&&n<20?c:m>1&&m<5?b:m==1?a:c}
 function simSVG(o){const b=o=='b',c1=b?'#ffd21a':'#14cf6e',c2=b?'#ffb300':'#007c3c',ink=b?'#111':'#fff',d='M12 0H112L168 44V202Q168 214 156 214H12Q0 214 0 202V12Q0 0 12 0Z';
-return `<svg viewBox="0 0 168 214" width="168" height="214"><defs><linearGradient id="sg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${c1}"/><stop offset="1" stop-color="${c2}"/></linearGradient><pattern id="st" width="16" height="16" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="8" height="16" fill="#000"/></pattern></defs><path d="${d}" fill="url(#sg)"/>${b?`<path d="${d}" fill="url(#st)" opacity=".16"/>`:''}<path d="${d}" fill="none" stroke="rgba(0,0,0,.22)" stroke-width="2"/><rect x="40" y="60" width="88" height="68" rx="10" fill="#f0d276" stroke="#8a6b12" stroke-width="2.5"/><path d="M40 94H128M84 60V128M40 77H68M100 77H128M40 111H68M100 111H128" stroke="#8a6b12" stroke-width="2.5" fill="none"/><text x="84" y="166" text-anchor="middle" font-family="Unbounded,Montserrat,system-ui,sans-serif" font-weight="600" font-size="20" letter-spacing="0.3" fill="${ink}">Выбить</text><text x="84" y="192" text-anchor="middle" font-family="Montserrat,system-ui,sans-serif" font-weight="700" font-size="15" letter-spacing="0.3" fill="${ink}" opacity=".85">50 ₽</text></svg>`}
+return `<svg viewBox="0 0 168 214" width="168" height="214"><defs><linearGradient id="sg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${c1}"/><stop offset="1" stop-color="${c2}"/></linearGradient><pattern id="st" width="16" height="16" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="8" height="16" fill="#000"/></pattern></defs><path d="${d}" fill="url(#sg)"/>${b?`<path d="${d}" fill="url(#st)" opacity=".16"/>`:''}<path d="${d}" fill="none" stroke="rgba(0,0,0,.22)" stroke-width="2"/><rect x="40" y="60" width="88" height="68" rx="10" fill="#f0d276" stroke="#8a6b12" stroke-width="2.5"/><path d="M40 94H128M84 60V128M40 77H68M100 77H128M40 111H68M100 111H128" stroke="#8a6b12" stroke-width="2.5" fill="none"/><text x="84" y="166" text-anchor="middle" font-family="Montserrat,system-ui,sans-serif" font-weight="700" font-size="21" fill="${ink}">Выбить</text><text x="84" y="192" text-anchor="middle" font-family="system-ui,sans-serif" font-weight="800" font-size="15" fill="${ink}" opacity=".85">50 ₽</text></svg>`}
 function setOp(o){op=o;render()}
 function sellCommon(){ask('common',()=>run(async()=>{await rpc('sell_common');await sync()}))}
-function go(t){tab=t;tradeFor=null;peek=null;render()}
+function go(t){tab=t;tradeFor=null;peek=null;render();$('main').scrollTop=0}
 function pull(){run(async()=>{if(busy||P.coins<50)return;if(N.length>=300){msg='Коллекция заполнена (300 из 300). Продайте номера во вкладке «Коллекция».';render();return}busy=true;msg='';dk={spin:1};dock();coinsUI();
  const sp=(async()=>{for(let i=0;i<9;i++){const e=$('dn');if(e)e.textContent=`+7 (9${Math.random()*100|0}) ${100+Math.random()*900|0}-${10+Math.random()*90|0}-${10+Math.random()*90|0}`;await sleep(45)}})();
  const [g]=await Promise.all([rpc('draw',{p_op:op}),sp]);
@@ -220,7 +226,7 @@ function accept(id){run(async()=>{toast(await rpc('accept_trade',{p_id:id})?'О�
 function cancel(id){run(async()=>{await rpc('cancel_trade',{p_id:id});await sync()})}
 function coinsUI(){$('bal').textContent=fmt(P.coins);const s=document.querySelector('.sim');if(s)s.disabled=busy||P.coins<50}
 function numHTML(g){const t=T[g.tier];return `<span class="num" style="--rc:${t.c}">${g.num}</span> <span class="sub">${t.n}</span>`}
-function dock(){const el=$('dock');
+function dock(){const el=$('dock');el.style.display=tab!='game'?'none':'';
  const sc=a=>`<div class="scale">${T.map((t,i)=>`<div class="seg ${a===i?'on':''}" style="--c:${t.c}">${t.n}</div>`).join('')}</div>`;
  if(!dk){el.style.setProperty('--rc','');el.innerHTML=sc(-1)+`<div class="dnum" style="font-size:15px;color:var(--mute)">Нажми на SIM, чтобы выбить номер</div><div class="dmeta"><span class="sub">Шкала редкости: чем правее, тем дороже</span></div>`;return}
  if(dk.spin){el.style.setProperty('--rc','');el.innerHTML=sc(-1)+`<div class="dnum" id="dn" style="color:var(--mute)">…</div><div class="dmeta"><span class="sub">Выбиваем номер</span></div>`;return}
@@ -233,7 +239,7 @@ function authView(){const el=$('auth');el.hidden=false;const up=amode=='up';
  <input id="an" placeholder="Ник" autocomplete="username" maxlength="20"><input id="ap" type="password" placeholder="Пароль" autocomplete="${up?'new-password':'current-password'}">${up?'<input id="ap2" type="password" placeholder="Повторите пароль" autocomplete="new-password">':''}
  <div class="err" id="ae"></div><button class="btn" style="width:100%;padding:14px" onclick="doAuth()">${up?'Создать аккаунт':'Войти'}</button>
  <div class="sub" style="margin-top:14px">Аккаунт общий для всех устройств. Если забудете пароль, восстановить его нельзя.</div></div>`}
-function bagRow(g){const t=T[g.tier];return `<div class="card" style="border-left:6px solid ${t.c}"><div class="row"><div>${numHTML(g)}<div class="sub">${OPS[g.op]}${g.showcase?' · в ящике':''}</div></div><b>${fmt(pv(g))}</b></div><div class="acts">${g.tier>1||g.showcase?`<button class="btn ghost" onclick="pin('${g.id}')">${g.showcase?'Снять с ящика':'В ящик'}</button>`:''}${g.showcase?'':`<button class="btn ghost" onclick="startTrade('${g.id}')">Передать</button><button class="btn" onclick="sellAsk('${g.id}')">${arm===g.id?'Точно?':'Продать '+fmt(pv(g))}</button>`}</div></div>`}
+function bagRow(g){const t=T[g.tier];return `<div class="card" style="border-left:6px solid ${t.c}"><div class="row"><div>${numHTML(g)}<div class="sub">${OPS[g.op]}${g.showcase?' · в ящике':''}</div></div><b style="white-space:nowrap">${fmt(pv(g))}</b></div><div class="acts">${g.tier>1||g.showcase?`<button class="btn ghost" onclick="pin('${g.id}')">${g.showcase?'Снять с ящика':'В ящик'}</button>`:''}${g.showcase?'':`<button class="btn ghost" onclick="startTrade('${g.id}')">Передать</button><button class="btn" onclick="sellAsk('${g.id}')">${arm===g.id?'Точно?':'Продать '+fmt(pv(g))}</button>`}</div></div>`}
 function tradePanel(){const g=N.find(x=>x.id===tradeFor);if(!g)return'';
  return `<div class="card note"><b>Передать номер</b><div style="margin:6px 0 10px">${numHTML(g)}</div><input id="tn" placeholder="Ник друга" value="${tnv}" oninput="tnv=this.value" maxlength="20">
  <div class="acts"><button class="btn" onclick="offer()">Подарить</button><button class="btn ghost" onclick="peekBox()">Обмен: ящик игрока</button><button class="btn ghost" onclick="tradeFor=null;peek=null;render()">Отмена</button></div>
@@ -254,7 +260,7 @@ function render(){
   if(msg)h+=`<div class="card note"><b>${msg}</b></div>`;
   h+=`<div class="ops">${['m','b'].map(o=>`<button class="op ${o=='m'?'mf':'bl'} ${op==o?'on':''}" onclick="setOp('${o}')">${OPS[o]}</button>`).join('')}</div>
   <div class="stage"><button class="sim" onclick="pull()" aria-label="Выбить номер">${simSVG(op)}</button></div>
-  <div class="sub" style="text-align:center;margin:-6px 0 12px">Один тап = одна попытка. Обычные номера не сохраняются.</div>`;
+  <div class="sub" style="text-align:center;margin:-6px 0 12px">Один тап по SIM — одна попытка. Все номера попадают в коллекцию.</div>`;
   if(P.coins<50)h+=`<div class="card"><b>Не хватает на попытку.</b><div class="sub">Продайте номера из коллекции или вернитесь завтра за бонусом 10 000 ₽.</div></div>`;
   h+=`<div class="card"><div class="sub" style="margin-bottom:6px">Рейтинг номеров: цена и шанс за одну попытку</div>${T.map((t,i)=>`<div class="tier" ${i?'':'style="border-top:0"'}><span class="dot" style="--rc:${t.c}"></span><div style="flex:1"><div class="row"><b>${t.n}</b><b>${i?fmt(PR[i][0])+' – '+fmt(PR[i][1]):'от '+PR[0][0]+' ₽'}</b></div><div class="sub">${t.d}${i?' Шанс '+t.w+'%.':''}</div></div></div>`).join('')}</div>`;
  }else if(tab=='bag'){
@@ -270,7 +276,7 @@ function render(){
   h+=(a.length?`<div class="sub" style="margin-bottom:6px">Входящие</div>`+a.map(trRow).join(''):'')+(b.length?`<div class="sub" style="margin:10px 0 6px">Исходящие</div>`+b.map(trRow).join(''):'');
   if(!a.length&&!b.length)h='<div class="empty">Обменов нет.<br>Откройте «Коллекция», выберите номер и нажмите «Передать».</div>';
  }else if(tab=='pf'){
-  h+=`<div class="hero"><div class="av big">${(P.nick||'?')[0].toUpperCase()}</div><div class="hn f">${P.nick}</div><div class="chips"><span>💰 ${fmt(P.coins)}</span><span>⏱ ${dur(P.play_sec||0)}</span><span>📱 ${N.length} номеров</span></div></div>
+  h+=`<div class="hero"><div class="av big">${(P.nick||'?')[0].toUpperCase()}</div><div class="hn f">${P.nick}</div><div class="chips"><span>💰 ${fmt(P.coins)}</span><span>⏱ ${dur(P.play_sec||0)}</span><span>📱 ${N.length} ${pl(N.length,'номер','номера','номеров')}</span></div></div>
   <button class="mi" onclick="go('st')"><span class="ic">📊</span><span>Статистика<small>Время, попытки, выручка, шансы</small></span><i>›</i></button>
   <button class="mi" onclick="go('se')"><span class="ic">⚙️</span><span>Настройки<small>Цвет, тема, оформление</small></span><i>›</i></button>
   <button class="mi out" onclick="ask('out',logout)">${arm==='out'?'Точно выйти?':'🚪 Выйти'}</button>`;
